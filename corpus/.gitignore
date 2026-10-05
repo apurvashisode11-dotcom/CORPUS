@@ -1,7 +1,8 @@
+.venv/
+venv/
 __pycache__/
 *.pyc
-venv/
 .env
-*.pt
-*.pth
-data/
+node_modules/
+.DS_Store
+*.db
