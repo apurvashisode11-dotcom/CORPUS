@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Workforce OS - UI design preview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#14213d;--mute:#5d6b82;--line:#e1e7f0;--blue:#1a6fc4;--teal:#17a8a3;--amber:#e8a912;--red:#d64550;--green:#1f9d6b;--soft:#eaf2fb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1626;--card:#16213a;--ink:#e8eefb;--mute:#93a2bd;--line:#26334f;--soft:#1b2a47}}
+:root[data-theme="dark"]{--bg:#0e1626;--card:#16213a;--ink:#e8eefb;--mute:#93a2bd;--line:#26334f;--soft:#1b2a47}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "Plus Jakarta Sans","Noto Sans Devanagari",system-ui,sans-serif}
+.app{max-width:1280px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.logo i{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--teal));display:block}
+.biz{color:var(--mute);font-size:13px;flex:1;min-width:180px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--mute);padding:7px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--blue);color:#fff}
+.mic{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--soft);color:var(--ink);padding:7px 14px;border-radius:10px;font:inherit;cursor:pointer}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--red)}
+.goal{margin:14px 0;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.goal b{font-size:15px}.goal span{color:var(--mute)}
+.grid{display:grid;grid-template-columns:260px 1fr 320px;gap:14px;align-items:start}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+h2{margin:0 0 10px;font-size:14px;font-weight:700}
+.tree{list-style:none;margin:0;padding:0}
+.tree li{display:flex;align-items:center;gap:8px;padding:6px 0}
+.tree ul{list-style:none;margin:0 0 0 13px;padding:0 0 0 12px;border-left:2px solid var(--line)}
+.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;flex:none}
+.st{margin-left:auto;font-size:11px;color:var(--mute)}
+.st.work{color:var(--teal)}.st.wait{color:var(--amber)}.st.ok{color:var(--green)}
+.task{display:flex;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+.chip{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--mute);white-space:nowrap}
+.chip.ok{background:#dff5ec;color:#157a54}.chip.wait{background:#fdf1d4;color:#8a6205}.chip.work{background:#d9f3f2;color:#0d7773}.chip.err{background:#fbe0e2;color:#a82b35}
+.feed{display:flex;flex-direction:column;gap:8px}
+.msg{display:grid;grid-template-columns:54px 1fr;gap:10px;padding:9px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.msg time{color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums}
+.msg .who{font-weight:600}
+.msg.guard{border-color:var(--amber);background:#fdf6e3;color:#4d3a05}
+.msg.fail{border-color:var(--red);background:#fdeced;color:#6d1f26}
+.msg.good{border-color:var(--green);background:#e6f6ef;color:#14553b}
+.msg.guard .who,.msg.fail .who,.msg.good .who{color:inherit}
+.msg.guard time,.msg.fail time,.msg.good time{color:inherit;opacity:.7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .msg.guard{background:#3a2f10;color:#f6dd9c}:root:not([data-theme="light"]) .msg.fail{background:#3b1a1f;color:#f5b9bf}:root:not([data-theme="light"]) .msg.good{background:#123327;color:#9be0c2}}
+.appr{border:1px solid var(--amber);background:#fff9e8;color:#3d2f05;border-radius:12px;padding:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .appr{background:#3a2f10;color:#f6dd9c}}
+.appr .amt{font-size:26px;font-weight:700;margin:4px 0}
+.appr p{margin:0 0 6px;font-size:13px}
+.btns{display:flex;gap:8px;margin-top:10px}
+.btns button{flex:1;padding:9px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line)}
+.ap{background:var(--green);color:#fff;border-color:var(--green)!important}
+.rj{background:transparent;color:inherit}
+.readback{margin-top:10px;font-size:12px;opacity:.85}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.kpi b{display:block;font-size:17px}.kpi span{color:var(--mute);font-size:12px}
+.tag{margin-top:14px;text-align:center;color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo"><i></i>AI Workforce OS</div>
+  <div class="biz" id="biz">Threadline Apparel · Instagram and website store</div>
+  <div class="seg" role="group" aria-label="Language">
+    <button data-l="en" class="on">English</button><button data-l="hi">हिंदी</button><button data-l="mr">मराठी</button>
+  </div>
+  <button class="mic"><span class="dot"></span><span id="micL">Speak a goal</span></button>
+</header>
+
+<div class="goal"><b id="goalT">Goal</b><span id="goalV">Launch our new Rs 1,999 jacket next Monday</span><span class="chip work" id="goalS">In progress</span></div>
+
+<div class="grid">
+  <aside class="panel">
+    <h2 id="hTeam">Your AI team</h2>
+    <ul class="tree">
+      <li><span class="av" style="background:var(--blue)">M</span><b>Manager</b><span class="st work" id="s0">Planning</span>
+        <ul style="flex-basis:100%"></ul></li>
+    </ul>
+    <ul class="tree" style="margin-left:13px;padding-left:12px;border-left:2px solid var(--line)">
+      <li><span class="av" style="background:#7a56c9">Mk</span><span>Marketing</span><span class="st wait" id="s1">Waiting</span></li>
+      <li><span class="av" style="background:var(--teal)">F</span><span>Finance</span><span class="st work" id="s2">Working</span></li>
+      <li><span class="av" style="background:var(--amber)">An</span><span>Analytics</span><span class="st ok" id="s3">Done</span></li>
+    </ul>
+    <h2 style="margin-top:16px" id="hTask">Task board</h2>
+    <div class="task">Check past ad results<span class="chip ok" data-k="done">Done</span></div>
+    <div class="task">Plan jacket campaign<span class="chip work" data-k="prog">In progress</span></div>
+    <div class="task">Approve campaign budget<span class="chip wait" id="tBudget" data-k="wait">Needs you</span></div>
+    <div class="task">Send customer offers<span class="chip" data-k="queue">Queued</span></div>
+  </aside>
+
+  <main class="panel">
+    <h2 id="hFeed">Live activity log</h2>
+    <div class="feed" id="feed">
+      <div class="msg"><time>10:02</time><div><span class="who">Owner</span> to Manager: Launch the Rs 1,999 jacket next Monday</div></div>
+      <div class="msg"><time>10:02</time><div><span class="who">Manager</span> to Marketing: Plan the jacket campaign</div></div>
+      <div class="msg"><time>10:03</time><div><span class="who">Marketing</span> to Analytics: What was our last ad click rate?</div></div>
+      <div class="msg"><time>10:03</time><div><span class="who">Analytics</span> to Marketing: 4.2% click rate on the last campaign</div></div>
+      <div class="msg"><time>10:04</time><div><span class="who">Marketing</span> to Finance: Need Rs 18,000 for Instagram ads</div></div>
+      <div class="msg guard"><time>10:04</time><div><span class="who">Rules guard</span>: Rs 18,000 is above Marketing's Rs 10,000 limit. Sent to owner.</div></div>
+      <div class="msg fail"><time>10:05</time><div><span class="who">Tool timeout</span>: Ad platform did not respond. Manager gave the task to Finance.</div></div>
+    </div>
+  </main>
+
+  <aside>
+    <div class="appr" id="appr">
+      <h2 id="hAppr" style="margin-bottom:2px">Needs your approval</h2>
+      <div class="amt">Rs 18,000</div>
+      <p id="aWhy">Marketing wants to run Instagram ads for the jacket launch.</p>
+      <p id="aLim">Above the Rs 10,000 limit for Marketing.</p>
+      <div class="btns"><button class="ap" id="bAp">Approve</button><button class="rj" id="bRj">Reject</button></div>
+      <div class="readback" id="rb">Voice check: "Approve Rs 18,000 for Marketing?"</div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h2 id="hKpi">Results so far</h2>
+      <div class="kpis">
+        <div class="kpi"><b>4.2%</b><span id="k1">Last ad click rate</span></div>
+        <div class="kpi"><b>Rs 0</b><span id="k2">Spent today</span></div>
+        <div class="kpi"><b>1</b><span id="k3">Failure fixed</span></div>
+        <div class="kpi"><b>1</b><span id="k4">Waiting on you</span></div>
+      </div>
+    </div>
+  </aside>
+</div>
+<div class="tag">UI design preview · sample data</div>
+</div>
+
+<script>
+var T={
+en:{team:"Your AI team",task:"Task board",feed:"Live activity log",appr:"Needs your approval",kpi:"Results so far",goal:"Goal",mic:"Speak a goal",
+ gv:"Launch our new Rs 1,999 jacket next Monday",gs:"In progress",why:"Marketing wants to run Instagram ads for the jacket launch.",lim:"Above the Rs 10,000 limit for Marketing.",ap:"Approve",rj:"Reject",
+ rb:"Voice check: \"Approve Rs 18,000 for Marketing?\"",k:["Last ad click rate","Spent today","Failure fixed","Waiting on you"],
+ st:["Planning","Waiting","Working","Done"],ch:["Done","In progress","Needs you","Queued"],ok:"Approved by owner. Marketing can start the ads.",okc:"Done"},
+hi:{team:"आपकी AI टीम",task:"काम की सूची",feed:"लाइव गतिविधि लॉग",appr:"आपकी मंज़ूरी चाहिए",kpi:"अब तक के नतीजे",goal:"लक्ष्य",mic:"लक्ष्य बोलें",
+ gv:"अगले सोमवार हमारी नई Rs 1,999 की जैकेट लॉन्च करें",gs:"जारी है",why:"मार्केटिंग जैकेट लॉन्च के लिए इंस्टाग्राम विज्ञापन चलाना चाहती है।",lim:"मार्केटिंग की Rs 10,000 की सीमा से ज़्यादा।",ap:"मंज़ूर करें",rj:"अस्वीकार करें",
+ rb:"आवाज़ से जाँच: \"मार्केटिंग के लिए Rs 18,000 मंज़ूर करें?\"",k:["पिछला विज्ञापन क्लिक दर","आज का खर्च","ठीक की गई गड़बड़ी","आपके जवाब का इंतज़ार"],
+ st:["योजना","इंतज़ार","काम जारी","पूरा"],ch:["पूरा","जारी है","आपकी बारी","कतार में"],ok:"मालिक ने मंज़ूर किया। मार्केटिंग विज्ञापन शुरू कर सकती है।",okc:"पूरा"},
+mr:{team:"तुमची AI टीम",task:"कामांची यादी",feed:"लाइव्ह नोंद",appr:"तुमची मंजुरी हवी",kpi:"आतापर्यंतचे निकाल",goal:"उद्दिष्ट",mic:"उद्दिष्ट बोला",
+ gv:"पुढच्या सोमवारी आपले नवीन Rs 1,999 चे जॅकेट लाँच करा",gs:"सुरू आहे",why:"मार्केटिंगला जॅकेट लाँचसाठी इन्स्टाग्राम जाहिराती चालवायच्या आहेत.",lim:"मार्केटिंगच्या Rs 10,000 मर्यादेपेक्षा जास्त.",ap:"मंजूर करा",rj:"नाकारा",
+ rb:"आवाजाने तपासणी: \"मार्केटिंगसाठी Rs 18,000 मंजूर करायचे?\"",k:["मागील जाहिरात क्लिक दर","आजचा खर्च","दुरुस्त केलेली अडचण","तुमच्या उत्तराची वाट"],
+ st:["नियोजन","वाट पाहत आहे","काम सुरू","पूर्ण"],ch:["पूर्ण","सुरू आहे","तुमची वेळ","रांगेत"],ok:"मालकाने मंजूर केले. मार्केटिंग जाहिराती सुरू करू शकते.",okc:"पूर्ण"}};
+var lang="en",approved=false;
+function $(i){return document.getElementById(i)}
+function render(){
+  var t=T[lang];
+  $("hTeam").textContent=t.team;$("hTask").textContent=t.task;$("hFeed").textContent=t.feed;$("hAppr").textContent=t.appr;$("hKpi").textContent=t.kpi;
+  $("goalT").textContent=t.goal;$("goalV").textContent=t.gv;$("goalS").textContent=t.gs;$("micL").textContent=t.mic;
+  $("aWhy").textContent=t.why;$("aLim").textContent=t.lim;$("bAp").textContent=t.ap;$("bRj").textContent=t.rj;$("rb").textContent=t.rb;
+  for(var i=0;i<4;i++){$("k"+(i+1)).textContent=t.k[i];$("s"+i).textContent=t.st[i]}
+  var map={done:0,prog:1,wait:2,queue:3};
+  document.querySelectorAll(".chip[data-k]").forEach(function(c){c.textContent=t.ch[map[c.dataset.k]]});
+  document.querySelectorAll(".seg button").forEach(function(b){b.classList.toggle("on",b.dataset.l===lang)});
+  if(approved){$("tBudget").textContent=t.okc}
+}
+document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(){lang=b.dataset.l;render()}});
+$("bAp").onclick=function(){
+  if(approved)return;approved=true;
+  var m=document.createElement("div");m.className="msg good";
+  m.innerHTML='<time>10:06</time><div><span class="who">Owner</span>: '+T[lang].ok+'</div>';
+  $("feed").appendChild(m);
+  $("tBudget").className="chip ok";$("s1").className="st work";
+  $("appr").style.opacity=".55";render();
+};
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>corpus - AI Workforce OS</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#14213d;--mute:#5d6b82;--line:#e1e7f0;--blue:#1a6fc4;--teal:#17a8a3;--amber:#e8a912;--red:#d64550;--green:#1f9d6b;--soft:#eaf2fb}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1626;--card:#16213a;--ink:#e8eefb;--mute:#93a2bd;--line:#26334f;--soft:#1b2a47}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,"Noto Sans Devanagari",sans-serif}
+.app{max-width:1280px;margin:0 auto;padding:16px}.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+header{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.logo{font-weight:700;font-size:17px;flex:1}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.seg button{border:0;background:none;color:var(--mute);padding:7px 12px;cursor:pointer;font:inherit}.seg .on{background:var(--blue);color:#fff}
+h2{margin:0 0 8px;font-size:14px}.row{display:flex;gap:8px;flex-wrap:wrap}textarea,input{flex:1;min-width:200px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px;font:inherit}
+button.b{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}button.g{background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font:inherit}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chip{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--mute)}
+.grid{display:grid;grid-template-columns:270px 1fr 310px;gap:14px;align-items:start}@media(max-width:980px){.grid{grid-template-columns:1fr}}
+.ag{display:flex;gap:8px;align-items:center;padding:6px 0}.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;background:var(--blue)}
+.st{margin-left:auto;font-size:11px;color:var(--mute)}.task{display:flex;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+.tag{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--soft);white-space:nowrap}
+.done{background:#dff5ec;color:#157a54}.in_progress{background:#d9f3f2;color:#0d7773}.needs_approval{background:#fdf1d4;color:#8a6205}.failed,.skipped{background:#fbe0e2;color:#a82b35}
+.feed{display:flex;flex-direction:column;gap:7px;max-height:480px;overflow:auto}.msg{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.msg time{color:var(--mute);font-size:12px}.msg b{font-weight:600}.msg.guard{border-color:var(--amber)}.msg.failure{border-color:var(--red)}.msg.good,.msg.approval{border-color:var(--green)}
+.appr{border:1px solid var(--amber);border-radius:12px;padding:14px}.amt{font-size:26px;font-weight:700}.btns{display:flex;gap:8px;margin-top:10px}.btns button{flex:1}
+.rj{background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px;cursor:pointer;font:inherit}.mute{color:var(--mute)}
+</style></head><body><div class="app">
+<header class="panel"><div class="logo">corpus · AI Workforce OS</div>
+<div class="seg"><button data-l="en" class="on">English</button><button data-l="hi">हिंदी</button><button data-l="mr">मराठी</button></div>
+<button class="b" id="demo"></button><button class="g" id="reset"></button></header>
+
+<div class="panel"><h2 id="h1"></h2><div class="row"><textarea id="desc" rows="2"></textarea><button class="g" data-mic="desc"></button><button class="b" id="build"></button></div><div class="chips" id="hired"></div></div>
+<div class="panel"><h2 id="h2"></h2><div class="row"><input id="goal"><button class="g" data-mic="goal"></button><button class="b" id="run"></button></div></div>
+
+<div class="grid">
+ <aside class="panel"><h2 id="hTeam"></h2><div id="team"></div><h2 id="hTasks" style="margin-top:14px"></h2><div id="tasks"></div></aside>
+ <main class="panel"><h2 id="hLog"></h2><div class="feed" id="feed"></div></main>
+ <aside><div class="panel appr" id="appr" hidden><h2 id="hAppr"></h2><div class="amt" id="aAmt"></div><div id="aWho" class="mute"></div>
+  <div class="btns"><button class="b" id="ap"></button><button class="rj" id="rj"></button></div></div>
+  <div class="panel mute" id="noAppr"></div></aside>
+</div></div>
+<script>
+const L={
+en:{h1:"1. Describe your business",h2:"2. Give your AI team a goal",hTeam:"Your AI team",hTasks:"Task board",hLog:"Live activity log",hAppr:"Needs your approval",
+ build:"Build my AI workforce",run:"Run goal",reset:"Reset demo",ap:"Approve",rj:"Reject",noAppr:"No approvals waiting.",
+ descPh:"e.g. I run a small clothing business selling through Instagram and a website.",goalPh:"e.g. Launch our new Rs 1,999 jacket next Monday",
+ nomic:"Voice input is not supported in this browser (use Chrome).",confirm:(a,w)=>`Approve Rs ${a.toLocaleString("en-IN")} for ${w}?`,
+ st:{queued:"Queued",in_progress:"Working",needs_approval:"Needs you",done:"Done",failed:"Failed",skipped:"Skipped"},
+ roles:{manager:"Manager",sales:"Sales",marketing:"Marketing",support:"Support",finance:"Finance",inventory:"Inventory",analytics:"Analytics",owner:"Owner",rules_guard:"Rules guard",system:"System"}},
+hi:{h1:"1. अपने व्यवसाय के बारे में बताएँ",h2:"2. अपनी AI टीम को लक्ष्य दें",hTeam:"आपकी AI टीम",hTasks:"कार्य सूची",hLog:"लाइव गतिविधि लॉग",hAppr:"आपकी मंज़ूरी चाहिए",
+ build:"मेरी AI टीम बनाएँ",run:"लक्ष्य चलाएँ",reset:"डेमो रीसेट",ap:"मंज़ूर करें",rj:"अस्वीकार",noAppr:"कोई मंज़ूरी बाकी नहीं।",
+ descPh:"जैसे: मैं इंस्टाग्राम और वेबसाइट से कपड़े बेचता हूँ।",goalPh:"जैसे: सोमवार को हमारी Rs 1,999 की नई जैकेट लॉन्च करो",
+ nomic:"इस ब्राउज़र में वॉइस इनपुट उपलब्ध नहीं है (Chrome इस्तेमाल करें)।",confirm:(a,w)=>`${w} के लिए Rs ${a.toLocaleString("en-IN")} मंज़ूर करें?`,
+ st:{queued:"कतार में",in_progress:"काम जारी",needs_approval:"आपकी ज़रूरत",done:"पूरा",failed:"असफल",skipped:"छोड़ा"},
+ roles:{manager:"मैनेजर",sales:"सेल्स",marketing:"मार्केटिंग",support:"सपोर्ट",finance:"फ़ाइनेंस",inventory:"इन्वेंटरी",analytics:"एनालिटिक्स",owner:"मालिक",rules_guard:"नियम रक्षक",system:"सिस्टम"}},
+mr:{h1:"1. तुमच्या व्यवसायाबद्दल सांगा",h2:"2. तुमच्या AI टीमला उद्दिष्ट द्या",hTeam:"तुमची AI टीम",hTasks:"कामांची यादी",hLog:"थेट हालचाल लॉग",hAppr:"तुमची मंजुरी हवी",
+ build:"माझी AI टीम तयार करा",run:"उद्दिष्ट चालवा",reset:"डेमो रीसेट",ap:"मंजूर करा",rj:"नाकारा",noAppr:"कोणतीही मंजुरी प्रलंबित नाही.",
+ descPh:"उदा. मी इन्स्टाग्राम आणि वेबसाइटवरून कपडे विकतो.",goalPh:"उदा. सोमवारी आमचे Rs 1,999 चे नवे जॅकेट लाँच करा",
+ nomic:"या ब्राउझरमध्ये व्हॉइस इनपुट उपलब्ध नाही (Chrome वापरा).",confirm:(a,w)=>`${w} साठी Rs ${a.toLocaleString("en-IN")} मंजूर करायचे?`,
+ st:{queued:"रांगेत",in_progress:"काम सुरू",needs_approval:"तुमची गरज",done:"पूर्ण",failed:"अयशस्वी",skipped:"वगळले"},
+ roles:{manager:"मॅनेजर",sales:"सेल्स",marketing:"मार्केटिंग",support:"सपोर्ट",finance:"फायनान्स",inventory:"इन्व्हेंटरी",analytics:"अ‍ॅनालिटिक्स",owner:"मालक",rules_guard:"नियम रक्षक",system:"सिस्टम"}}};
+let lang="en",state=null,pending=null;const $=id=>document.getElementById(id);
+const rn=r=>r==="ad_platform"?{en:"Ad platform",hi:"विज्ञापन प्लैटफ़ॉर्म",mr:"जाहिरात प्लॅटफॉर्म"}[lang]:(L[lang].roles[r]||r);
+async function api(p,body){const r=await fetch(p,body?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}:{method:"POST"});return r.json()}
+async function get(p){return (await fetch(p)).json()}
+function labels(){const l=L[lang];for(const k of["h1","h2","hTeam","hTasks","hLog","hAppr","noAppr"])$(k).textContent=l[k];
+ $("build").textContent=l.build;$("run").textContent=l.run;$("reset").textContent=l.reset;$("ap").textContent=l.ap;$("rj").textContent=l.rj;
+ $("demo").textContent={en:"▶ Play demo",hi:"▶ डेमो चलाएँ",mr:"▶ डेमो चालवा"}[lang];document.querySelectorAll("[data-mic]").forEach(b=>b.textContent={en:"Speak",hi:"बोलें",mr:"बोला"}[lang]);$("desc").placeholder=l.descPh;$("goal").placeholder=l.goalPh;document.documentElement.lang=lang;render()}
+function render(){if(!state)return;const l=L[lang];
+ $("team").innerHTML=state.agents.map(a=>{const t=state.tasks.find(x=>x.assignee===a.role);const h=state.tasks.some(x=>x.previous_assignee===a.role);const s=t?l.st[t.status]:(h?{en:"Handed over",hi:"सौंपा गया",mr:"सोपवले"}[lang]:"");
+  return `<div class="ag"><span class="av">${rn(a.role)[0]}</span><span>${rn(a.role)}</span><span class="st">${s}</span></div>`}).join("");
+ $("hired").innerHTML=state.agents.map(a=>`<span class="chip" title="${a.reason}">${rn(a.role)}</span>`).join("");
+ $("tasks").innerHTML=state.tasks.map(t=>`<div class="task"><span>${t.title}</span><span class="tag ${t.status}">${l.st[t.status]}</span></div>`).join("");
+ pending=state.approvals[0]||null;$("appr").hidden=!pending;$("noAppr").hidden=!!pending;
+ if(pending){$("aAmt").textContent="Rs "+pending.amount.toLocaleString("en-IN");$("aWho").textContent=rn(pending.agent)+" · "+pending.action}}
+function addEvent(e){const d=document.createElement("div");d.className="msg "+e.kind;
+ const to=e.data&&e.data.to?" → "+rn(e.data.to):"";
+ d.innerHTML=`<time>${new Date(e.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}</time><div><b>${rn(e.actor)}</b>${to}: ${e.text}</div>`;
+ const f=$("feed");f.appendChild(d);f.scrollTop=f.scrollHeight}
+async function refresh(){state=await get("/api/state");render()}
+async function init(){(await get("/api/audit")).forEach(addEvent);await refresh();
+ const es=new EventSource("/api/stream");es.onmessage=m=>{addEvent(JSON.parse(m.data));refresh()}}
+$("build").onclick=async()=>{if($("desc").value.trim()){await api("/api/workforce/build",{description:$("desc").value,lang});refresh()}};
+$("run").onclick=async()=>{if($("goal").value.trim()){const r=await api("/api/objectives",{text:$("goal").value,lang});if(r.detail)alert(r.detail)}};
+$("demo").onclick=async()=>{await api("/api/reset");$("feed").innerHTML="";
+ const d={en:"I run a small clothing business selling through Instagram and a website.",hi:"मैं इंस्टाग्राम और वेबसाइट से कपड़े बेचता हूँ।",mr:"मी इन्स्टाग्राम आणि वेबसाइटवरून कपडे विकतो."}[lang];
+ const g={en:"Launch our new Rs 1,999 jacket next Monday",hi:"सोमवार को हमारी Rs 1,999 की नई जैकेट लॉन्च करो",mr:"सोमवारी आमचे Rs 1,999 चे नवे जॅकेट लाँच करा"}[lang];
+ $("desc").value=d;$("goal").value=g;await api("/api/workforce/build",{description:d,lang});await refresh();
+ await new Promise(r=>setTimeout(r,1500));await api("/api/objectives",{text:g,lang})};
+$("reset").onclick=async()=>{await api("/api/reset");$("feed").innerHTML="";refresh()};
+async function decide(ok){if(!pending)return;
+ if(ok){const msg=L[lang].confirm(pending.amount,rn(pending.agent));
+  if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(msg);u.lang={en:"en-IN",hi:"hi-IN",mr:"mr-IN"}[lang];speechSynthesis.speak(u)}
+  if(!confirm(msg))return}
+ await api(`/api/approvals/${pending.id}/decision`,{approve:ok});refresh()}
+$("ap").onclick=()=>decide(true);$("rj").onclick=()=>decide(false);
+document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{lang=b.dataset.l;document.querySelectorAll("[data-l]").forEach(x=>x.classList.toggle("on",x===b));labels()});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+document.querySelectorAll("[data-mic]").forEach(b=>b.onclick=()=>{if(!SR)return alert(L[lang].nomic);
+ const r=new SR();r.lang={en:"en-IN",hi:"hi-IN",mr:"mr-IN"}[lang];r.onresult=e=>{$(b.dataset.mic).value=e.results[0][0].transcript};r.start()});
+labels();init();
+</script></body></html>

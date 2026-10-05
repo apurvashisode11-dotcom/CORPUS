@@ -1,0 +1,25 @@
+"""Role catalog: the fixed list of AI jobs. The business profile decides who gets hired.
+Spend limits and blocked actions live in policy_engine.py (one source of truth)."""
+ROLES = {
+ "manager": {"title": "AI Manager", "goals": "Break goals into tasks, assign them, verify results, escalate to the owner",
+   "kpis": ["tasks completed", "escalations"], "reason": "Every workforce needs a coordinator",
+   "when": lambda p: True},
+ "sales": {"title": "Sales Agent", "goals": "Find customers and send offers",
+   "kpis": ["leads", "conversion"], "reason": "The business sells to customers",
+   "when": lambda p: p["has_customers"]},
+ "marketing": {"title": "Marketing Agent", "goals": "Plan and run campaigns within budget",
+   "kpis": ["click rate", "cost per lead"], "reason": "Customers are reached through online channels or promotions",
+   "when": lambda p: p["sells_online"] or p["runs_promotions"]},
+ "support": {"title": "Support Agent", "goals": "Answer customer questions and handle orders",
+   "kpis": ["response time", "satisfaction"], "reason": "The business talks to customers",
+   "when": lambda p: p["has_customers"]},
+ "finance": {"title": "Finance Agent", "goals": "Track budgets, payments and invoices",
+   "kpis": ["budget accuracy", "payment delays"], "reason": "The business takes payments",
+   "when": lambda p: p["takes_payments"]},
+ "inventory": {"title": "Inventory Agent", "goals": "Track stock and reorder before it runs out",
+   "kpis": ["stock-outs", "stock turnover"], "reason": "The business sells physical goods",
+   "when": lambda p: p["sells_physical_goods"]},
+ "analytics": {"title": "Analytics Agent", "goals": "Measure results and report what worked",
+   "kpis": ["report accuracy"], "reason": "Online sales and campaigns produce data worth tracking",
+   "when": lambda p: p["sells_online"] or p["runs_promotions"]},
+}
